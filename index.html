@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumBarunGothic@latest/nanumbarungothicsubset.css">
+    <link href='/js/main.css' rel='stylesheet' />
+    <script src="/js/main.min.js"></script>
+    <script src="/js/locales-all.min.js"></script>
+    <title>쉐도우문 달력</title>
+    <style>
+        body {
+            margin: 0 auto;
+            font-family: 'NanumBarunGothic', sans-serif;
+        }
+        
+        #loading {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        #calendar {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id='loading'>loading...</div>
+
+    <div id='calendar'></div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+
+            locale: 'ko',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,dayGridWeek,listYear'
+            },
+            buttonText: {
+                today: "오늘",
+                month: "월별",
+                week: "주별",
+                day: "일별",
+                list: "목록",
+            },
+
+            displayEventTime: true, // don't show the time column in list view
+            displayEventEnd: true,
+            weekends: true,
+            firstDay: 1,
+
+            // THIS KEY WON'T WORK IN PRODUCTION!!!
+            // To make your own Google API key, follow the directions here:
+            // http://fullcalendar.io/docs/google_calendar/
+            googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
+
+            // US Holidays
+            //events: 'en.usa#holiday@group.v.calendar.google.com',
+            eventSources: [{
+                googleCalendarId: 'c6qmjb1ra49ufog59ca5qbpbi8@group.calendar.google.com',
+                className: 'shadowmoon-evt',
+            }],
+
+            eventClick: function(arg) {
+                // opens events in a popup window
+                //window.open(arg.event.url, 'google-calendar-event', 'width=700,height=600');
+
+                alert(arg.event.title);
+                console.log(JSON.stringify(arg));
+
+                arg.jsEvent.preventDefault() // don't navigate in main tab
+            },
+
+            loading: function(bool) {
+                document.getElementById('loading').style.display =
+                    bool ? 'block' : 'none';
+            }
+
+        });
+
+        calendar.render();
+    });
+</script>
+
+</body>
+
+</html>
